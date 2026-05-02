@@ -79,6 +79,21 @@ textarea {
   resize: vertical;
 }
 
+.valid-message,
+.error-message {
+  margin: 0;
+  font-size: 0.85rem;
+  line-height: 1.35;
+}
+
+.valid-message {
+  color: #15803d;
+}
+
+.error-message {
+  color: #be123c;
+}
+
 button {
   justify-self: start;
   border: 0;

@@ -1,6 +1,14 @@
 import { useState } from 'react'
 import './App.css'
 
+
+
+const letters = 'abcdefghijklmnopqrstuvwxyz'
+const numbers = '0123456789'
+const symbols = '!@#$%^&*()-_=+[]{}|;:\'",.<>?/`~'
+
+
+
 function App() {
   // Campi controllati
   const [fullName, setFullName] = useState('Tiana')
@@ -12,17 +20,38 @@ function App() {
     'Sono una giovane sviluppatrice con 3 anni di esperienza nel settore.',
   )
 
+//Milestone 2: Validazione dei campi
+  const isUsernameValid =
+    username.length >= 6 &&
+    username
+      .toLowerCase()
+      .split('')
+      .every((char) => letters.includes(char) || numbers.includes(char))
+
+  const hasLetter = password
+    .toLowerCase()
+    .split('')
+    .some((char) => letters.includes(char))
+  const hasNumber = password.split('').some((char) => numbers.includes(char))
+  const hasSymbol = password.split('').some((char) => symbols.includes(char))
+  const isPasswordValid = password.length >= 8 && hasLetter && hasNumber && hasSymbol
+
+  const trimmedDescription = description.trim()
+  const isDescriptionValid =
+    trimmedDescription.length >= 100 && trimmedDescription.length <= 1000
+
+//gestione submit con validazione finale
   const handleSubmit = (e) => {
     e.preventDefault()
 
     if (
       !fullName.trim() ||
-      !username.trim() ||
-      !password.trim() ||
+      !isUsernameValid ||
+      !isPasswordValid ||
       !specialization.trim() ||
       !experienceYears.trim() ||
       experienceYears <= 0 ||
-      !description.trim()
+      !isDescriptionValid
     ) {
       alert('Errore: compilare tutti i campi correttamente.')
       return
@@ -34,7 +63,7 @@ function App() {
       password,
       specialization,
       experienceYears,
-      description,
+      description: trimmedDescription,
     })
   }
 
@@ -65,6 +94,11 @@ function App() {
               value={username}
               onChange={(e) => setUsername(e.target.value)}
             />
+            <p className={isUsernameValid ? 'valid-message' : 'error-message'}>
+              {isUsernameValid
+                ? 'Username valido'
+                : 'Username: almeno 6 caratteri, solo lettere e numeri.'}
+            </p>
           </div>
 
           <div className="field">
@@ -75,6 +109,11 @@ function App() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
             />
+            <p className={isPasswordValid ? 'valid-message' : 'error-message'}>
+              {isPasswordValid
+                ? 'Password valida'
+                : 'Password: almeno 8 caratteri, 1 lettera, 1 numero e 1 simbolo.'}
+            </p>
           </div>
 
           <div className="field">
@@ -109,6 +148,11 @@ function App() {
               value={description}
               onChange={(e) => setDescription(e.target.value)}
             />
+            <p className={isDescriptionValid ? 'valid-message' : 'error-message'}>
+              {isDescriptionValid
+                ? 'Descrizione valida'
+                : 'Descrizione: inserisci tra 100 e 1000 caratteri.'}
+            </p>
           </div>
 
           <button type="submit">Registrati</button>
