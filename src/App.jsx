@@ -1,26 +1,24 @@
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import './App.css'
-
-
 
 const letters = 'abcdefghijklmnopqrstuvwxyz'
 const numbers = '0123456789'
 const symbols = '!@#$%^&*()-_=+[]{}|;:\'",.<>?/`~'
 
-
-
 function App() {
-  // Campi controllati
-  const [fullName, setFullName] = useState('Tiana')
+  // Milestone 3: Campi non controllati
+  const fullNameRef = useRef()
+  const specializationRef = useRef()
+  const experienceYearsRef = useRef()
+
+  // Campi controllati con validazione in tempo reale
   const [username, setUsername] = useState('tiana_dev')
   const [password, setPassword] = useState('12345678')
-  const [specialization, setSpecialization] = useState('Full Stack Developer')
-  const [experienceYears, setExperienceYears] = useState('3')
   const [description, setDescription] = useState(
     'Sono una giovane sviluppatrice con 3 anni di esperienza nel settore.',
   )
 
-//Milestone 2: Validazione dei campi
+  // Milestone 2: Validazione dei campi
   const isUsernameValid =
     username.length >= 6 &&
     username
@@ -28,21 +26,27 @@ function App() {
       .split('')
       .every((char) => letters.includes(char) || numbers.includes(char))
 
+    // Validazione password: almeno 8 caratteri, 1 lettera, 1 numero e 1 simbolo
   const hasLetter = password
     .toLowerCase()
     .split('')
     .some((char) => letters.includes(char))
   const hasNumber = password.split('').some((char) => numbers.includes(char))
   const hasSymbol = password.split('').some((char) => symbols.includes(char))
-  const isPasswordValid = password.length >= 8 && hasLetter && hasNumber && hasSymbol
+  const isPasswordValid =
+    password.length >= 8 && hasLetter && hasNumber && hasSymbol
 
   const trimmedDescription = description.trim()
   const isDescriptionValid =
     trimmedDescription.length >= 100 && trimmedDescription.length <= 1000
 
-//gestione submit con validazione finale
+  // Gestione submit con validazione finale
   const handleSubmit = (e) => {
     e.preventDefault()
+
+    const fullName = fullNameRef.current.value
+    const specialization = specializationRef.current.value
+    const experienceYears = experienceYearsRef.current.value
 
     if (
       !fullName.trim() ||
@@ -81,8 +85,8 @@ function App() {
             <input
               id="fullName"
               type="text"
-              value={fullName}
-              onChange={(e) => setFullName(e.target.value)}
+              defaultValue="Tiana"
+              ref={fullNameRef}
             />
           </div>
 
@@ -120,8 +124,8 @@ function App() {
             <label htmlFor="specialization">Specializzazione</label>
             <select
               id="specialization"
-              value={specialization}
-              onChange={(e) => setSpecialization(e.target.value)}
+              defaultValue="Full Stack Developer"
+              ref={specializationRef}
             >
               <option value="">Seleziona una specializzazione</option>
               <option value="Full Stack Developer">Full Stack Developer</option>
@@ -135,8 +139,8 @@ function App() {
             <input
               id="experienceYears"
               type="number"
-              value={experienceYears}
-              onChange={(e) => setExperienceYears(e.target.value)}
+              defaultValue="3"
+              ref={experienceYearsRef}
             />
           </div>
 
